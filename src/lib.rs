@@ -13,11 +13,16 @@ impl Config {
         if args.len() < 3 {
             return Err("not enough arguments");
         }
+
         let query    = args[1].clone();
         let filename = args[2].clone();
 
-        // is_err checks if the variable is NOT set
-        let case_sensitive = env::var("CASE_INSENSITIVE").is_err();
+        // ugly that the case insensitive flag is hardcoded to index 3, but oh well..
+        let case_sensitive = if args.len() > 3 {
+            args[3] != "--ci"
+        } else {
+            env::var("CASE_INSENSITIVE").is_err()
+        };
 
         Ok(Config {query, filename, case_sensitive})
     }
